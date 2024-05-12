@@ -39,6 +39,15 @@ public class C_Restart extends ClientBasePacket {
 		super(abyte0);
 		
 		L1PcInstance pc = clientthread.getActiveChar();
+
+		if (pc.getLevel() >= 49) { //TODO 49級以上 殷海薩的祝福安全區域登出紀錄
+			if (pc.getMap().isSafetyZone(pc.getLocation())) {
+				pc.setAinZone(1);
+			} else {
+				pc.setAinZone(0);
+			}
+		}
+
 		if (pc == null) {
 			return;
 		}

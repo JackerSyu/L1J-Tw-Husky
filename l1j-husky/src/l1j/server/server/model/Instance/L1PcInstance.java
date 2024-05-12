@@ -2485,6 +2485,55 @@ public class L1PcInstance extends L1Character {
 		CharacterTable.getInstance().storeCharacter(this);
 	}
 
+
+
+	// TODO 殷海薩的祝福
+	private Timestamp _lastActive;
+
+	public Timestamp getLastActive() {
+		return _lastActive;
+	}
+
+	public void setLastActive(Timestamp time) {
+		_lastActive = time;
+	}
+
+	public void setLastActive() {
+		_lastActive = new Timestamp(System.currentTimeMillis());
+	}
+
+	private int _ainZone = 1;
+
+	public void setAinZone(int i) {
+		_ainZone = i;
+	}
+
+	public int getAinZone() {
+		return _ainZone;
+	}
+
+	private int _ainPoint = 0;
+
+	public void setAinPoint(int i) {
+		_ainPoint = i;
+	}
+
+	public int getAinPoint() {
+		return _ainPoint;
+	}
+
+	private double _ainExp = Config.RATE_EXP_PROPORTION;
+
+	public void setAinExp(double i) {
+		_ainExp = i;
+	}
+
+	public double getAinExp() {
+		return _ainExp;
+	}
+
+
+
 	/**
 	 * このプレイヤーのインベントリアイテムの状態をストレージへ書き込む。
 	 */

@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.logging.Logger;
 
 import l1j.server.Config;
+import l1j.server.AinTimeController;
 import l1j.server.L1Message;
 import l1j.server.console.ConsoleProcess;
 import l1j.server.server.datatables.CastleTable;
@@ -227,6 +228,11 @@ public class GameServer extends Thread {
 		// 初始化 Light
 		LightTimeController lightTimeController = LightTimeController.getInstance();
 		GeneralThreadPool.getInstance().execute(lightTimeController);
+
+
+		// TODO 殷海薩的祝福
+		AinTimeController ainTimeController = AinTimeController.getInstance();
+		GeneralThreadPool.getInstance().execute(ainTimeController);
 
 		// 初始化遊戲公告
 		Announcements.getInstance();

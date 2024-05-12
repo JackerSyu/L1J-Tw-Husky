@@ -50,6 +50,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Calendar;
 
 import l1j.server.Config;
 import l1j.server.L1DatabaseFactory;
@@ -71,6 +72,7 @@ import l1j.server.server.model.Instance.L1PcInstance;
 import l1j.server.server.model.Instance.L1SummonInstance;
 import l1j.server.server.model.skill.L1BuffUtil;
 import l1j.server.server.model.skill.L1SkillUse;
+import l1j.server.server.serverpackets.S_SkillIconExp;
 import l1j.server.server.serverpackets.S_ActiveSpells;
 import l1j.server.server.serverpackets.S_AddSkill;
 import l1j.server.server.serverpackets.S_Bookmarks;
@@ -256,6 +258,39 @@ public class C_LoginToServer extends ClientBasePacket {
 		skills(pc);
 		buff(client, pc);
 		pc.turnOnOffLight();
+
+		// TODO 殷海薩的祝福
+		int ainOutTime = Config.RATE_AIN_OUTTIME;
+		int ainMaxPercent = Config.RATE_MAX_CHARGE_PERCENT;
+
+		if (pc.getLevel() >= 49) { // TODO 49級以上 殷海薩的祝福紀錄
+			if (pc.getMap().isSafetyZone(pc.getLocation())) {
+				pc.setAinZone(1);
+			} else {
+				pc.setAinZone(0);
+			}
+
+			if (pc.getAinPoint() >= 1) {
+				pc.sendPackets(new S_SkillIconExp(pc.getAinPoint()));// TODO 角色登入時點數大於1則送出
+			}
+			if (pc.getAinZone() == 1) {
+				Calendar cal = Calendar.getInstance();
+				long startTime = (cal.getTimeInMillis() - pc.getLastActive().getTime()) / 60000;
+
+				if (startTime >= ainOutTime) {
+					long outTime = startTime / ainOutTime;
+					long saveTime = outTime + pc.getAinPoint();
+					if (saveTime >= 1 && saveTime <= ainMaxPercent) {
+						pc.setAinPoint((int) saveTime);
+					} else if (saveTime > ainMaxPercent) {
+						pc.setAinPoint(ainMaxPercent);
+					}
+				}
+			}
+		}
+
+
+
 
 		pc.sendPackets(new S_Karma(pc)); // 友好度
 		/* 閃避率 */

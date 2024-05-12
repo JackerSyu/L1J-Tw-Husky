@@ -39,10 +39,13 @@ import l1j.server.server.model.L1World;
 import l1j.server.server.model.Instance.L1NpcInstance;
 import l1j.server.server.model.Instance.L1PcInstance;
 import l1j.server.server.model.Instance.L1PetInstance;
+import l1j.server.server.model.Instance.L1ScarecrowInstance;
 import l1j.server.server.model.Instance.L1SummonInstance;
 import l1j.server.server.serverpackets.S_PetPack;
 import l1j.server.server.serverpackets.S_ServerMessage;
 import l1j.server.server.templates.L1Pet;
+import l1j.server.server.serverpackets.S_SkillIconExp;
+
 
 // Referenced classes of package l1j.server.server.utils:
 // CalcStat
@@ -61,7 +64,7 @@ public class CalcExp {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
+	private static L1NpcInstance _npc = null;//TODO 殷海薩的祝福
 	public static void calcExp(L1PcInstance l1pcinstance, int targetid, List<L1Character> acquisitorList, List<Integer> hateList, int exp) {
 
 		int i = 0;
@@ -366,6 +369,7 @@ public class CalcExp {
 		double exppenalty = ExpTable.getPenaltyRate(pc.getLevel());
 		double foodBonus = 1.0;
 		double expBonus = 1.0;
+		double ainBonus = 1.0; // TODO 殷海薩的祝福
 		// 魔法料理經驗加成
 		if (pc.hasSkillEffect(COOKING_1_7_N) || pc.hasSkillEffect(COOKING_1_7_S)) {
 			foodBonus = 1.01;
@@ -390,9 +394,43 @@ public class CalcExp {
 		} else if (pc.hasSkillEffect(EFFECT_POTION_OF_EXP_250)) {
 			expBonus = 3.5;
 		}
+		// TODO 殷海薩的祝福 計算公式仍需驗證
+		if (pc.getAinPoint() > 0) {
+			if (!(_npc instanceof L1PetInstance//TODO 木人寵物召喚不計算加成
+					|| _npc instanceof L1SummonInstance
+					|| _npc instanceof L1ScarecrowInstance)) {
+				//TODO 木人寵物召喚不計算加成
+//				pc.setAinPoint(pc.getAinPoint() - 1);
+				pc.sendPackets(new S_SkillIconExp(pc.getAinPoint()));
+				ainBonus = 1.77; // 額外的經驗 77%
+			}
+		}
 
-		int add_exp = (int) (exp * exppenalty * Config.RATE_XP * foodBonus * expBonus);
+		int add_exp = (int) (exp * exppenalty * Config.RATE_XP
+				* foodBonus
+				* expBonus
+				* ainBonus);
+
+		// TODO 暴等洗血修正
+		if (add_exp < 0) {// 經驗值大於2147483647會變負值導致錯誤.
+			add_exp = 0;
+		} else if (add_exp > 36065092) {// 升一級所需要的EXP=36065092
+			add_exp = 36065092;
+		}
 		pc.addExp(add_exp);
+
+		//  TODO 殷海薩的祝福  (积累到一定经验扣除一点)
+		if (pc.getAinPoint() > 0) {
+			pc.setAinExp(pc.getAinExp() - exp);
+			if (pc.getAinExp() < 0) {
+				pc.setAinExp(Config.RATE_EXP_PROPORTION);
+				pc.setAinPoint(pc.getAinPoint() - 1);
+				pc.sendPackets(new S_SkillIconExp(pc.getAinPoint()));
+				if (pc.getAinPoint() <= 0) {
+					pc.setAinPoint(0);
+				}
+			}
+		}
 	}
 
 	private static void AddExpPet(L1PetInstance pet, int exp) {

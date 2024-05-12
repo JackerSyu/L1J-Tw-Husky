@@ -126,6 +126,10 @@ public class MySqlCharacterStorage implements CharacterStorage {
 			pc.setExpRes(rs.getInt("ExpRes"));
 			pc.setPartnerId(rs.getInt("PartnerID"));
 			pc.setAccessLevel(rs.getShort("AccessLevel"));
+			pc.setLastActive(rs.getTimestamp("LastActive"));// TODO 殷海薩的祝福
+			pc.setAinZone(rs.getInt("AinZone"));// TODO 殷海薩的祝福
+			pc.setAinPoint(rs.getInt("AinPoint"));// TODO 殷海薩的祝福
+
 			if (pc.getAccessLevel() == 200) {
 				pc.setGm(true);
 				pc.setMonitor(false);
@@ -319,7 +323,7 @@ public class MySqlCharacterStorage implements CharacterStorage {
 			int i = 0;
 			con = L1DatabaseFactory.getInstance().getConnection();
 			pstm = con
-					.prepareStatement("UPDATE characters SET level=?,HighLevel=?,Exp=?,MaxHp=?,CurHp=?,MaxMp=?,CurMp=?,Ac=?,Str=?,Con=?,Dex=?,Cha=?,Intel=?,Wis=?,Status=?,Class=?,Sex=?,Type=?,Heading=?,LocX=?,LocY=?,MapID=?,Food=?,Lawful=?,Title=?,ClanID=?,Clanname=?,ClanRank=?,BonusStatus=?,ElixirStatus=?,ElfAttr=?,PKcount=?,PkCountForElf=?,ExpRes=?,PartnerID=?,AccessLevel=?,OnlineStatus=?,HomeTownID=?,Contribution=?,HellTime=?,Banned=?,Karma=?,LastPk=?,LastPkForElf=?,DeleteTime=? WHERE objid=?");
+					.prepareStatement("UPDATE characters SET level=?,HighLevel=?,Exp=?,MaxHp=?,CurHp=?,MaxMp=?,CurMp=?,Ac=?,Str=?,Con=?,Dex=?,Cha=?,Intel=?,Wis=?,Status=?,Class=?,Sex=?,Type=?,Heading=?,LocX=?,LocY=?,MapID=?,Food=?,Lawful=?,Title=?,ClanID=?,Clanname=?,ClanRank=?,BonusStatus=?,ElixirStatus=?,ElfAttr=?,PKcount=?,PkCountForElf=?,ExpRes=?,PartnerID=?,AccessLevel=?,OnlineStatus=?,HomeTownID=?,Contribution=?,HellTime=?,Banned=?,Karma=?,LastPk=?,LastPkForElf=?,DeleteTime=?,LastActive=?,AinZone=?,AinPoint=? WHERE objid=?");
 			pstm.setInt(++i, pc.getLevel());
 			pstm.setInt(++i, pc.getHighLevel());
 			pstm.setInt(++i, pc.getExp());
@@ -369,6 +373,9 @@ public class MySqlCharacterStorage implements CharacterStorage {
 			pstm.setTimestamp(++i, pc.getLastPk());
 			pstm.setTimestamp(++i, pc.getLastPkForElf());
 			pstm.setTimestamp(++i, pc.getDeleteTime());
+			pstm.setTimestamp(++i, new Timestamp(System.currentTimeMillis()));// TODO 角色登出時間殷海薩的祝福
+			pstm.setInt(++i, pc.getAinZone());// TODO 殷海薩的祝福
+			pstm.setInt(++i, pc.getAinPoint());// TODO 殷海薩的祝福
 			pstm.setInt(++i, pc.getId());
 			pstm.execute();
 			_log.finest("stored char data:" + pc.getName());
