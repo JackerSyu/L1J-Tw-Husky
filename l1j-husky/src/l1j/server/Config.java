@@ -255,6 +255,14 @@ public final class Config {
 	
 	public static int GDROPITEM_TIME;
 
+	public static int RATE_AIN_TIME;// TODO 殷海薩的祝福
+
+	public static int RATE_AIN_OUTTIME;// TODO 殷海薩的祝福
+
+	public static int RATE_MAX_CHARGE_PERCENT;// TODO 殷海薩的祝福
+
+	public static int RATE_EXP_PROPORTION;// TODO 殷海薩的祝福
+
 	/** CharSettings control */
 	public static int PRINCE_MAX_HP;
 
@@ -565,7 +573,20 @@ public final class Config {
 			ALT_TALKINGSCROLLQUEST = Boolean.parseBoolean(altSettings.getProperty("TalkingScrollQuest", "false"));
 			ALT_WHO_COMMAND = Boolean.parseBoolean(altSettings.getProperty("WhoCommand", "false"));
 			ALT_REVIVAL_POTION = Boolean.parseBoolean(altSettings.getProperty("RevivalPotion", "false"));
-			GDROPITEM_TIME = Integer.parseInt(altSettings.getProperty("GDropItemTime", "10")); 
+			GDROPITEM_TIME = Integer.parseInt(altSettings.getProperty("GDropItemTime", "10"));
+
+			// TODO 殷海薩的祝福
+			RATE_AIN_TIME = Integer.parseInt(altSettings.getProperty(
+					"RateAinTime", "30"));
+			// TODO 殷海薩的祝福
+			RATE_AIN_OUTTIME = Integer.parseInt(altSettings.getProperty(
+					"RateAinOutTime", "30"));
+			// TODO 殷海薩的祝福
+			RATE_MAX_CHARGE_PERCENT = Integer.parseInt(altSettings.getProperty(
+					"RateMaxChargePercent", "200"));
+			// TODO 殷海薩的祝福(积累到一定经验扣除一点)
+			RATE_EXP_PROPORTION = Integer.parseInt(altSettings.getProperty(
+					"RateExpProportion", "30000"));
 
 			String strWar;
 			strWar = altSettings.getProperty("WarTime", "2h");
@@ -926,6 +947,14 @@ public final class Config {
 		}
 	    else if (pName.equalsIgnoreCase("GDropItemTime")) { 
 				GDROPITEM_TIME = Integer.parseInt(pValue);
+		} else if (pName.equalsIgnoreCase("RateAinTime")) {
+			RATE_AIN_TIME = Integer.parseInt(pValue);// TODO 殷海薩的祝福
+		} else if (pName.equalsIgnoreCase("RateAinOutTime")) {
+			RATE_AIN_OUTTIME = Integer.parseInt(pValue);// TODO 殷海薩的祝福
+		} else if (pName.equalsIgnoreCase("RateMaxChargePercent")) {
+			RATE_MAX_CHARGE_PERCENT = Integer.parseInt(pValue);// TODO 殷海薩的祝福
+		}else if (pName.equalsIgnoreCase("RateExpProportion")) {
+			RATE_EXP_PROPORTION = Integer.parseInt(pValue);// TODO 殷海薩的祝福
 		}
 
 		// charsettings.properties

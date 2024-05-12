@@ -180,6 +180,8 @@ public class S_PacketBox extends ServerBasePacket {
 
 	/** 魚がかかったグラフィックが表示される */
 	public static final int FISHING = 55;
+	/** 經驗值加成（殷海薩的祝福） */
+	public static final int EXPBLESS = 82;
 
 	/** 魔法娃娃狀態圖示*/
 	public static final int ICON_MAGIC_DOLL = 56;
@@ -243,6 +245,10 @@ public class S_PacketBox extends ServerBasePacket {
 				writeC(0x02);
 				writeC(0x01);
 				writeC(value); // level
+				break;
+			// TODO 殷海薩的祝福
+			case EXPBLESS:
+				writeC(value); // %值為0 ~ 200
 				break;
 			case 88: // + 閃避率
 				writeC(value);
