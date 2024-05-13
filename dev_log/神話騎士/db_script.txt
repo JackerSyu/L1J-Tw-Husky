@@ -1,0 +1,16 @@
+Replace INTO `spr_action` VALUES ('362', '0', '16', '36');
+Replace INTO `spr_action` VALUES ('362', '4', '16', '36');
+Replace INTO `spr_action` VALUES ('362', '11', '16', '36');
+Replace INTO `spr_action` VALUES ('362', '20', '16', '36');
+Replace INTO `spr_action` VALUES ('362', '24', '16', '36');
+Replace INTO `spr_action` VALUES ('362', '46', '16', '36');
+Replace INTO `spr_action` VALUES ('362', '50', '16', '36');
+Replace INTO `spr_action` VALUES ('362', '1', '17', '36');
+Replace INTO `spr_action` VALUES ('362', '5', '18', '36');
+Replace INTO `spr_action` VALUES ('362', '12', '21', '36');
+Replace INTO `spr_action` VALUES ('362', '18', '16', '36');
+Replace INTO `spr_action` VALUES ('362', '19', '18', '36');
+Replace INTO `spr_action` VALUES ('362', '21', '23', '36');
+Replace INTO `spr_action` VALUES ('362', '25', '20', '36');
+Replace INTO `spr_action` VALUES ('362', '47', '17', '36');
+Replace INTO `spr_action` VALUES ('362', '51', '21', '36');
