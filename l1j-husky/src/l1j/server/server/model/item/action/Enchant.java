@@ -504,12 +504,12 @@ public class Enchant {
 					int chance = 30;
 					if (rnd < chance || currEnchantLvl == 0) {
 						// 不退
-						item.setEnchantLevel(currEnchantLvl);
 						pc.sendPackets(new S_ServerMessage(3292, item.getLogName())); //強化保護卷 的效果\n\f1%0%s 強烈的發出強烈光芒後慢慢穩定了。
+						item.setEnchantLevel(currEnchantLvl);
 					} else {
 						// 退階
-						item.setEnchantLevel(currEnchantLvl - 1);
 						pc.sendPackets(new S_ServerMessage(3293, item.getLogName())); // 強化保護卷 的效果\n\f1%0%s 強烈的發出銀色的光芒後似乎減弱了。
+						item.setEnchantLevel(currEnchantLvl - 1);
 					}
 					pc.getInventory().removeItem(Item, consumeAmount); // 刪除指定物品1個
 					pc.sendPackets(new S_ItemStatus(item));
