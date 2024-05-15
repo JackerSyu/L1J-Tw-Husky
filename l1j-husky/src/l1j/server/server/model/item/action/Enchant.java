@@ -413,6 +413,8 @@ public class Enchant {
 	// 強化成功
 	private static void SuccessEnchant(L1PcInstance pc, L1ItemInstance item, ClientThread client, int i) {
 		int itemType2 = item.getItem().getType2();
+		//裝備保護卷軸
+		item.setproctect(false);
 
 		String[][] sa = { {"", "", "", "", ""}
 						, {"$246", "", "$245", "$245", "$245"}
@@ -479,6 +481,53 @@ public class Enchant {
 
 	// 強化失敗
 	private static void FailureEnchant(L1PcInstance pc, L1ItemInstance item) {
+		//裝備保護卷軸
+		for(Object item_ : pc.getInventory().getItems()) { // 檢查道具
+
+			L1ItemInstance Item = (L1ItemInstance) item_;
+
+			if (Item.getItem().getItemId() == 300039) {
+
+				int currEnchantLvl = item.getEnchantLevel();
+				int consumeAmount = 1;
+				if(currEnchantLvl < 10) {
+					consumeAmount = 1;
+				}
+				else if(currEnchantLvl >= 10 && currEnchantLvl < 15) {
+					consumeAmount = 2;
+				}
+				else {
+					consumeAmount = 3;
+				}
+				if (Item.getCount() >= consumeAmount) {
+					int rnd = Random.nextInt(100) + 1;
+					int chance = 30;
+					if (rnd < chance || currEnchantLvl == 0) {
+						// 不退
+						item.setEnchantLevel(currEnchantLvl);
+						pc.sendPackets(new S_ServerMessage(3292, item.getLogName())); //強化保護卷 的效果\n\f1%0%s 強烈的發出強烈光芒後慢慢穩定了。
+					} else {
+						// 退階
+						item.setEnchantLevel(currEnchantLvl - 1);
+						pc.sendPackets(new S_ServerMessage(3293, item.getLogName())); // 強化保護卷 的效果\n\f1%0%s 強烈的發出銀色的光芒後似乎減弱了。
+					}
+					pc.getInventory().removeItem(Item, consumeAmount); // 刪除指定物品1個
+					pc.sendPackets(new S_ItemStatus(item));
+					pc.getInventory().saveItem(item, L1PcInventory.COL_ENCHANTLVL);
+					item.setproctect(false);
+					return;
+				}
+			}
+		}
+
+//		if (item.getproctect() == true){
+//			item.setEnchantLevel(0);
+//			pc.sendPackets(new S_ItemStatus(item));
+//			pc.getInventory().saveItem(item, L1PcInventory.COL_ENCHANTLVL);
+//			item.setproctect(false);
+//			pc.sendPackets(new S_ServerMessage(1310));
+//			return;
+//		}
 		String[] sa = {"", "$245", "$252"}; // ""、藍色的、銀色的
 		int itemType2 = item.getItem().getType2();
 

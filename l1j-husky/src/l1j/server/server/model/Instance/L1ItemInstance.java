@@ -1380,4 +1380,14 @@ public class L1ItemInstance extends L1Object {
 	public void setDueTime(Timestamp i) {
 		_dueTime = i;
 	}
+
+	//裝備保護卷軸
+	private boolean proctect = false;
+
+	public boolean getproctect() {
+		return proctect;
+	}
+	public void setproctect(boolean i) {
+		proctect = i;
+	}
 }

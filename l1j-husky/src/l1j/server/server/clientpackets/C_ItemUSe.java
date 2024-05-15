@@ -115,6 +115,7 @@ import l1j.server.server.templates.L1Skills;
 import l1j.server.server.types.Point;
 import l1j.server.server.utils.L1SpawnUtil;
 import l1j.server.server.utils.Random;
+import l1j.server.server.serverpackets.S_SystemMessage;
 
 // Referenced classes of package l1j.server.server.clientpackets:
 // ClientBasePacket
@@ -621,12 +622,13 @@ public class C_ItemUSe extends ClientBasePacket {
 					}
 				}
 				else if (itemId == L1ItemId.COIN_OF_REPUTATION) { // 名譽貨幣
-					if (!pc.isDragonKnight() && !pc.isIllusionist()) { // 龍騎士與幻術師無法使用
-						Potion.Brave(pc, l1iteminstance, itemId);
-					} else {
-						pc.sendPackets(new S_ServerMessage(79)); // \f1沒有任何事情發生。
-						pc.getInventory().removeItem(l1iteminstance, 1);
-					}
+					Potion.Brave(pc, l1iteminstance, itemId);
+//					if (!pc.isDragonKnight() && !pc.isIllusionist()) { // 龍騎士與幻術師無法使用
+//						Potion.Brave(pc, l1iteminstance, itemId);
+//					} else {
+//						pc.sendPackets(new S_ServerMessage(79)); // \f1沒有任何事情發生。
+//						pc.getInventory().removeItem(l1iteminstance, 1);
+//					}
 				}
 				else if (itemId == L1ItemId.CHOCOLATE_CAKE) { // 巧克力蛋糕
 					Potion.ThirdSpeed(pc, l1iteminstance, 600);
