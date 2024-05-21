@@ -87,7 +87,7 @@ import static l1j.server.server.Opcodes.C_OPCODE_RESULT;
 import static l1j.server.server.Opcodes.C_OPCODE_RETURNTOLOGIN;
 import static l1j.server.server.Opcodes.C_OPCODE_SELECTLIST;
 import static l1j.server.server.Opcodes.C_OPCODE_SELECTTARGET;
-//import static l1j.server.server.Opcodes.C_OPCODE_SENDLOCATION;
+import static l1j.server.server.Opcodes.C_OPCODE_SENDLOCATION;
 import static l1j.server.server.Opcodes.C_OPCODE_SHIP;
 import static l1j.server.server.Opcodes.C_OPCODE_SHOP;
 import static l1j.server.server.Opcodes.C_OPCODE_SKILLBUY;
@@ -174,7 +174,7 @@ import l1j.server.server.clientpackets.C_Result;
 import l1j.server.server.clientpackets.C_ReturnToLogin;
 import l1j.server.server.clientpackets.C_SelectList;
 import l1j.server.server.clientpackets.C_SelectTarget;
-//import l1j.server.server.clientpackets.C_SendLocation;
+import l1j.server.server.clientpackets.C_SendLocation;
 import l1j.server.server.clientpackets.C_ServerVersion;
 import l1j.server.server.clientpackets.C_Ship;
 import l1j.server.server.clientpackets.C_Shop;
@@ -565,9 +565,9 @@ public class PacketHandler {
 				new C_Clan(abyte0, _client);
 				break;
 
-			/*case C_OPCODE_SENDLOCATION:
+			case C_OPCODE_SENDLOCATION:
 				new C_SendLocation(abyte0, _client);
-				break;*/
+				break;
 
 			case C_OPCODE_WAREHOUSELOCK:
 				new C_WarePassword(abyte0, _client);

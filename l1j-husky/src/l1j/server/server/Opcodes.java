@@ -57,7 +57,8 @@ public class Opcodes {
 	    public static final int C_OPCODE_USEPETITEM = 36; // 請求使用寵物裝備
 	    public static final int C_OPCODE_CHANGEHEADING = 37; // 請求改變角色面向
 	    public static final int C_OPCODE_SHOP = 38; // 請求開設個人商店
-	    public static final int C_OPCODE_MAPSYSTEM = 39; // 請求使用一般聊天頻道
+	    // public static final int C_OPCODE_MAPSYSTEM = 39; // 請求使用一般聊天頻道
+	    public static final int C_OPCODE_SENDLOCATION = 39; // 請求傳送位置
 	    public static final int C_OPCODE_CHAT = 40; // 請求使用一般聊天頻道
 	    public static final int C_OPCODE_EMBLEM = 41; // 請求上傳盟徽
 	    public static final int C_OPCODE_DELBUDDY = 42; // 請求刪除好友
@@ -132,7 +133,6 @@ public class Opcodes {
 	    public static final int C_OPCODE_ATTR = 129; // 請求點選項目的結果
 	    public static final int C_OPCODE_CREATEPARTY = 130; // 請求邀請加入隊伍或建立隊伍
 	    public static final int C_OPCODE_CAHTPARTY = 131; // 請求聊天隊伍
-		
 	
 	  	/** Server Packet */
 	    public static final int S_OPCODE_INPUTAMOUNT = 0; // 輸入數量要產生的數量
