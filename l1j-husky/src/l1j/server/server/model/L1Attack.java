@@ -895,7 +895,7 @@ public class L1Attack {
 		// 計算武器總傷害
 		int weaponTotalDamage = calcWeponDamage(_weaponSmall);
 
-		if ((_weaponId == 262) && (Random.nextInt(100) + 1 <= 75)) { // ディストラクション装備かつ成功確率(暫定)75%
+		if ((_weaponId == 262) && (Random.nextInt(100) + 1 <= 75) || (_weaponId == 12)) { // ディストラクション装備かつ成功確率(暫定)75%
 			weaponTotalDamage += calcDestruction(weaponTotalDamage);
 		}
 
@@ -915,9 +915,9 @@ public class L1Attack {
 			dmg += L1WeaponSkill.getBaphometStaffDamage(_pc, _target);
 		} else if (_weaponId == 2 || _weaponId == 200002) { // ダイスダガー
 			dmg += L1WeaponSkill.getDiceDaggerDamage(_pc, _targetPc, weapon);
-		} else if (_weaponId == 204 || _weaponId == 100204) { // 真紅のクロスボウ
+		} else if (_weaponId == 204 || _weaponId == 100204 || _weaponId == 86) { // 深紅之努 新增紅影雙刀魔法效果
 			L1WeaponSkill.giveFettersEffect(_pc, _targetPc);
-		} else if (_weaponId == 264 || _weaponId == 288) { // ライトニングエッジ
+		} else if (_weaponId == 264 || _weaponId == 288 || _weaponId == 134) { //新增聖經魔杖魔法效果
 			dmg += L1WeaponSkill.getLightningEdgeDamage(_pc, _target);
 		} else if (_weaponId == 260 || _weaponId == 263 || _weaponId == 287) { // レイジングウィンド、フリージングランサー
 			dmg += L1WeaponSkill.getAreaSkillWeaponDamage(_pc, _target,
@@ -1025,7 +1025,7 @@ public class L1Attack {
 		// 計算武器總傷害
 		int weaponTotalDamage = calcWeponDamage(weaponMaxDamage) ;
 		
-		if ((_weaponId == 262) && (Random.nextInt(100) + 1 <= 75)) { // ディストラクション装備かつ成功確率(暫定)75%
+		if ((_weaponId == 262) && (Random.nextInt(100) + 1 <= 75) || (_weaponId == 12)) { // ディストラクション装備かつ成功確率(暫定)75%
 			weaponTotalDamage += calcDestruction(weaponTotalDamage);
 		}
 
@@ -1045,10 +1045,10 @@ public class L1Attack {
 			dmg += L1WeaponSkill.getBaphometStaffDamage(_pc, _target);
 		} else if ((_weaponId == 2) || (_weaponId == 200002)) { // ダイスダガー
 			dmg += L1WeaponSkill.getDiceDaggerDamage(_pc, _targetNpc, weapon);
-		} else if ((_weaponId == 204) || (_weaponId == 100204)) { // 真紅のクロスボウ
+		} else if (_weaponId == 204 || _weaponId == 100204 || _weaponId == 86) { // 深紅之努 紅影雙刀
 			L1WeaponSkill.giveFettersEffect(_pc, _targetNpc);
 		//} else if (_weaponId == 264 || _weaponId == 291) { // ライトニングエッジ
-		} else if (_weaponId == 264 || _weaponId == 288) { // ライトニングエッジ, 天雷劍能發動的修正
+		} else if (_weaponId == 264 || _weaponId == 288 || _weaponId == 134) { //新增聖經魔杖魔法效果
 			dmg += L1WeaponSkill.getLightningEdgeDamage(_pc, _target);
 		} else if ((_weaponId == 260) || (_weaponId == 263 || _weaponId == 287)) { // レイジングウィンド、フリージングランサー
 			dmg += L1WeaponSkill.getAreaSkillWeaponDamage(_pc, _target,

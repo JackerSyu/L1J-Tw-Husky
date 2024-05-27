@@ -449,7 +449,9 @@ public class L1WeaponSkill {
 	public static double getLightningEdgeDamage(L1PcInstance pc, L1Character cha) {
 		double dmg = 0;
 		int chance = Random.nextInt(100) + 1;
-		if (4 >= chance) {
+		int weaponLevel = pc.getWeapon().getEnchantLevel();
+		int extraChance = weaponLevel > 21 ? 21 : weaponLevel;
+		if ((4 + extraChance) >= chance) {
 			int sp = pc.getSp();
 			int intel = pc.getInt();
 			double bsk = 0;
@@ -482,10 +484,11 @@ public class L1WeaponSkill {
 		if (isFreeze(cha)) { // 凍結状態orカウンターマジック中
 			return;
 		}
-		if ((Random.nextInt(100) + 1) <= 2) {
-			L1EffectSpawn.getInstance().spawnEffect(81182, fettersTime,
-					cha.getX(), cha.getY(), cha.getMapId());
+		if ((Random.nextInt(100) + 1) <= 4) {
+			
 			if (cha instanceof L1PcInstance) {
+				fettersTime = (1 + Random.nextInt(3)) * 1000;
+				L1EffectSpawn.getInstance().spawnEffect(81182, fettersTime, cha.getX(), cha.getY(), cha.getMapId());
 				L1PcInstance targetPc = (L1PcInstance) cha;
 				targetPc.setSkillEffect(STATUS_FREEZE, fettersTime);
 				targetPc.sendPackets(new S_SkillSound(targetPc.getId(), 4184));
@@ -493,9 +496,9 @@ public class L1WeaponSkill {
 						4184));
 				targetPc.sendPackets(new S_Paralysis(S_Paralysis.TYPE_BIND,
 						true));
-			} else if ((cha instanceof L1MonsterInstance)
-					|| (cha instanceof L1SummonInstance)
-					|| (cha instanceof L1PetInstance)) {
+			} else if ((cha instanceof L1MonsterInstance) || (cha instanceof L1SummonInstance) || (cha instanceof L1PetInstance)) {
+				fettersTime = (3 + Random.nextInt(6)) * 1000;
+				L1EffectSpawn.getInstance().spawnEffect(81182, fettersTime, cha.getX(), cha.getY(), cha.getMapId());
 				L1NpcInstance npc = (L1NpcInstance) cha;
 				npc.setSkillEffect(STATUS_FREEZE, fettersTime);
 				npc.broadcastPacket(new S_SkillSound(npc.getId(), 4184));
