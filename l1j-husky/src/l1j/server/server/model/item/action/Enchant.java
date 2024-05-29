@@ -311,13 +311,31 @@ public class Enchant {
 		// 0:無属性 1:地 2:火 4:水 8:風
 		int oldAttrEnchantKind = l1iteminstance1.getAttrEnchantKind();
 		int oldAttrEnchantLevel = l1iteminstance1.getAttrEnchantLevel();
+		int enchantLevel = l1iteminstance1.getEnchantLevel();
 
+		if(enchantLevel < 0) {
+			pc.sendPackets(new S_ServerMessage(1453)); // 此裝備無法使用強化。
+			return;
+		}
 		boolean isSameAttr = false;
 		if (((itemId == 41429) && (oldAttrEnchantKind == 8)) || ((itemId == 41430) && (oldAttrEnchantKind == 1))
 				|| ((itemId == 41431) && (oldAttrEnchantKind == 4)) || ((itemId == 41432) && (oldAttrEnchantKind == 2))) { // 同じ属性
 			isSameAttr = true;
 		}
 		if (isSameAttr && (oldAttrEnchantLevel >= 5)) {
+			pc.sendPackets(new S_ServerMessage(1453)); // 此裝備無法使用強化。
+			return;
+		}
+		// 0~9 => 三階, 10 => 四階, 11 UP => 五階
+		if ((enchantLevel >=0 && enchantLevel <= 9) && isSameAttr && (oldAttrEnchantLevel >= 3)) {
+			pc.sendPackets(new S_ServerMessage(1453)); // 此裝備無法使用強化。
+			return;
+		}
+		if ((enchantLevel == 10) && isSameAttr && (oldAttrEnchantLevel >= 4)) {
+			pc.sendPackets(new S_ServerMessage(1453)); // 此裝備無法使用強化。
+			return;
+		}
+		if (enchantLevel >=11 && isSameAttr && (oldAttrEnchantLevel >= 5)) {
 			pc.sendPackets(new S_ServerMessage(1453)); // 此裝備無法使用強化。
 			return;
 		}
@@ -446,6 +464,24 @@ public class Enchant {
 				logenchant.storeLogEnchant(pc.getId(), item.getId(), oldEnchantLvl, newEnchantLvl);
 			}
 		}
+		// 處理武器屬性退階
+		if(item.getItem().getType2() == 1 && i < 0) {
+			// 武器精煉數10/屬性4=>3階, 武器精煉數11/屬性5=>4階
+			int currAttrEnchantLevel = item.getAttrEnchantLevel();
+			if((oldEnchantLvl == 10 && currAttrEnchantLevel == 4) ||
+					(oldEnchantLvl == 11 && currAttrEnchantLevel == 5)){
+				item.setAttrEnchantLevel(currAttrEnchantLevel - 1);
+				pc.getInventory().updateItem(item, L1PcInventory.COL_ATTR_ENCHANT_LEVEL);
+				pc.getInventory().saveItem(item, L1PcInventory.COL_ATTR_ENCHANT_LEVEL);
+			} else if((oldEnchantLvl - 1) < 0 && currAttrEnchantLevel > 0){
+				item.setAttrEnchantKind(0);
+				pc.getInventory().updateItem(item, L1PcInventory.COL_ATTR_ENCHANT_KIND);
+				pc.getInventory().saveItem(item, L1PcInventory.COL_ATTR_ENCHANT_KIND);
+				item.setAttrEnchantLevel(0);
+				pc.getInventory().updateItem(item, L1PcInventory.COL_ATTR_ENCHANT_LEVEL);
+				pc.getInventory().saveItem(item, L1PcInventory.COL_ATTR_ENCHANT_LEVEL);
+			}
+		}
 
 		if (item.getItem().getType2() == 2) { // 防具類
 			if (item.isEquipped()) {
@@ -507,7 +543,24 @@ public class Enchant {
 						pc.sendPackets(new S_ServerMessage(3292, item.getLogName())); //強化保護卷 的效果\n\f1%0%s 強烈的發出強烈光芒後慢慢穩定了。
 						item.setEnchantLevel(currEnchantLvl);
 					} else {
-						// 退階
+						int itemType2 = item.getItem().getType2();
+						if(itemType2 == 1) { // weapon
+							// 武器精煉數10/屬性4=>3階, 武器精煉數11/屬性5=>4階
+							int currAttrEnchantLevel = item.getAttrEnchantLevel();
+							if((currEnchantLvl == 10 && currAttrEnchantLevel == 4) ||
+								(currEnchantLvl == 11 && currAttrEnchantLevel == 5)){
+								item.setAttrEnchantLevel(currAttrEnchantLevel - 1);
+								pc.getInventory().updateItem(item, L1PcInventory.COL_ATTR_ENCHANT_LEVEL);
+								pc.getInventory().saveItem(item, L1PcInventory.COL_ATTR_ENCHANT_LEVEL);
+							} else if((currEnchantLvl - 1) < 0 && currAttrEnchantLevel > 0){
+								item.setAttrEnchantKind(0);
+								pc.getInventory().updateItem(item, L1PcInventory.COL_ATTR_ENCHANT_KIND);
+								pc.getInventory().saveItem(item, L1PcInventory.COL_ATTR_ENCHANT_KIND);
+								item.setAttrEnchantLevel(0);
+								pc.getInventory().updateItem(item, L1PcInventory.COL_ATTR_ENCHANT_LEVEL);
+								pc.getInventory().saveItem(item, L1PcInventory.COL_ATTR_ENCHANT_LEVEL);
+							}
+						}
 						pc.sendPackets(new S_ServerMessage(3293, item.getLogName())); // 強化保護卷 的效果\n\f1%0%s 強烈的發出銀色的光芒後似乎減弱了。
 						item.setEnchantLevel(currEnchantLvl - 1);
 					}
