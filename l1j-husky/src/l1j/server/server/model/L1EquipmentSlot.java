@@ -94,7 +94,7 @@ public class L1EquipmentSlot {
 		_owner.addHitModifierByArmor(item.getHitModifierByArmor());
 		_owner.addDmgModifierByArmor(item.getDmgModifierByArmor());
 		_owner.addBowHitModifierByArmor(item.getBowHitModifierByArmor());
-		_owner.addBowDmgModifierByArmor(item.getBowDmgModifierByArmor());
+		_owner.addBowDmgModifierByArmor(item.getBowDmgModifierByArmor() + armor.getDmgModifierByArmor());
 		_owner.addRegistStun(item.get_regist_stun());
 		_owner.addRegistStone(item.get_regist_stone());
 		_owner.addRegistSleep(item.get_regist_sleep());
@@ -179,7 +179,8 @@ public class L1EquipmentSlot {
 		_owner.addDamageReductionByArmor(-item.getDamageReduction());
 		_owner.addWeightReduction(-item.getWeightReduction());
 		_owner.addHitModifierByArmor(-item.getHitModifierByArmor());
-		_owner.addDmgModifierByArmor(-item.getDmgModifierByArmor());
+		// 古鬥
+		_owner.addDmgModifierByArmor(-item.getDmgModifierByArmor() - armor.getDmgModifierByArmor());
 		_owner.addBowHitModifierByArmor(-item.getBowHitModifierByArmor());
 		_owner.addBowDmgModifierByArmor(-item.getBowDmgModifierByArmor());
 		_owner.addRegistStun(-item.get_regist_stun());

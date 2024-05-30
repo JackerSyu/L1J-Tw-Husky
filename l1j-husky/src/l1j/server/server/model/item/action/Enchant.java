@@ -484,6 +484,15 @@ public class Enchant {
 		}
 
 		if (item.getItem().getType2() == 2) { // 防具類
+			// 古代鬥士臂甲
+//			if(item.getItem().getItemId() == 21106){
+//				item.setDmgModifierByArmor(item.getDmgModifierByArmor() + newEnchantLvl);
+//				if (item.isEquipped()) {
+//					pc.addDmgModifierByArmor(item.getDmgModifierByArmor() + newEnchantLvl);
+//				}
+//				pc.sendPackets(new S_ItemStatus(item));
+//			}
+
 			if (item.isEquipped()) {
 				if ((item.getItem().getType() < 8
 						|| item.getItem().getType() > 12)) {
@@ -510,6 +519,16 @@ public class Enchant {
 						break;
 					}
 				}
+				//混沌斗篷
+				if (armorId == 20078) {
+					pc.addMr(i * 3);
+					pc.sendPackets(new S_SPMR(pc));
+				}
+				// 古鬥
+				if (armorId == 21106) {
+					pc.addDmgModifierByArmor(i * 1);
+					pc.sendPackets(new S_ItemStatus(item));
+				}
 			}
 			pc.sendPackets(new S_OwnCharAttrDef(pc));
 		}
@@ -519,11 +538,8 @@ public class Enchant {
 	private static void FailureEnchant(L1PcInstance pc, L1ItemInstance item) {
 		//裝備保護卷軸
 		for(Object item_ : pc.getInventory().getItems()) { // 檢查道具
-
 			L1ItemInstance Item = (L1ItemInstance) item_;
-
 			if (Item.getItem().getItemId() == 300039) {
-
 				int currEnchantLvl = item.getEnchantLevel();
 				int consumeAmount = 1;
 				if(currEnchantLvl < 10) {
