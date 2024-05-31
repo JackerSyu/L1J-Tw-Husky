@@ -824,12 +824,7 @@ public class L1PcInstance extends L1Character {
 		getStat().reduceCurrentHp(d, l1character);
 	}
 
-	/**
-	 * 指定されたプレイヤー群にログアウトしたことを通知する
-	 * 
-	 * @param playersList
-	 *            通知するプレイヤーの配列
-	 */
+
 	private void notifyPlayersLogout(List<L1PcInstance> playersArray) {
 		for (L1PcInstance player : playersArray) {
 			if (player.knownsObject(this)) {

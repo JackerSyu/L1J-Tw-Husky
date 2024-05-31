@@ -262,12 +262,46 @@ public class L1ItemInstance extends L1Object {
 				|| (getItemId() == L1ArmorId.C_CLOAK_OF_MAGIC_RESISTANCE)) { // 受咀咒的 抗魔法斗篷
 			mr += getEnchantLevel() * 2;
 		}
+		if ((getItemId() == 20078)) { // 混沌斗篷
+			mr += getEnchantLevel() * 3;
+		}
 		// 飾品強化效果
 		if (getM_Def() != 0) {
 			mr += getM_Def();
 		}
 		return mr;
 	}
+	// 古鬥
+//	public int getHitModifier(){
+//		int getHitModifier = _item.getHitModifier();
+//		if(getItemId() >= 1 && getItemId() <=275 || getItemId() == 21106){
+//			if(getEnchantLevel()< 1){
+//				getHitModifier = 0;
+//				return getHitModifier;
+//			}
+//			getHitModifier += getEnchantLevel();
+//		}
+//		return getHitModifier;
+//	}
+
+	// 古鬥
+	public int getDmgModifierByArmor(){
+		int getDmgModifierByArmor = 0;
+		int curEnchantLevel = getEnchantLevel();
+		if(getItemId() == 21106){
+			if(curEnchantLevel < 5){
+				getDmgModifierByArmor = 0;
+			} else if (curEnchantLevel >= 5 && curEnchantLevel < 7){
+				getDmgModifierByArmor = 1;
+			} else if (curEnchantLevel >= 7 && curEnchantLevel <9){
+				getDmgModifierByArmor = 2;
+			} else {
+				getDmgModifierByArmor = 3;
+			}
+		}
+		return getDmgModifierByArmor;
+	}
+
 
 	/*
 	 * 耐久性、0~127まで -の値は許可しない。
@@ -874,6 +908,8 @@ public class L1ItemInstance extends L1Object {
 				if (getItem().getHitModifierByArmor() != 0) {
 					os.writeC(5);
 					os.writeC(getItem().getHitModifierByArmor());
+					// 古鬥
+//					os.writeC(getItem().getHitModifier() + getHitModifier());
 				}
 			}
 			// 追加打撃
@@ -885,7 +921,8 @@ public class L1ItemInstance extends L1Object {
 			} else if (itemType2 == 2) { // armor
 				if (getItem().getDmgModifierByArmor() != 0) {
 					os.writeC(6);
-					os.writeC(getItem().getDmgModifierByArmor());
+//					os.writeC(getItem().getDmgModifierByArmor());
+					os.writeC(getItem().getDmgModifierByArmor() + getDmgModifierByArmor());
 				}
 			}
 			// 使用可能
@@ -1028,6 +1065,22 @@ public class L1ItemInstance extends L1Object {
 				os.writeC(15);
 				os.writeH(getMr());
 			}
+
+			// 古鬥
+//			if (getHitModifier() != 0){
+//				if(getItem().getHitModifier()== 0){
+//					os.writeC(5);
+//					os.writeH(getHitModifier());
+//				}
+//			}
+
+			if (getDmgModifierByArmor() != 0){
+				if(getItem().getDmgModifierByArmor()== 0){
+					os.writeC(6);
+					os.writeH(getDmgModifierByArmor());
+				}
+			}
+
 			// 體力回復率
 			if (getItem().get_addhpr() != 0 || getHpr() != 0) {
 				os.writeC(37);
@@ -1225,6 +1278,17 @@ public class L1ItemInstance extends L1Object {
 	public void setaddSp(int i) {
 		_addSp = i;
 	}
+
+//	private int _addDmgModifierByArmor = 0;
+//
+//	public int getDmgModifierByArmor() {
+//		return _addDmgModifierByArmor;
+//	}
+//
+//	public void setDmgModifierByArmor(int addDmgModifierByArmor) {
+//		_addDmgModifierByArmor = addDmgModifierByArmor;
+//	}
+
 
 	public void setSkillArmorEnchant(L1PcInstance pc, int skillId, int skillTime) {
 		int type = getItem().getType();

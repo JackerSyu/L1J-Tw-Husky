@@ -825,6 +825,9 @@ public class L1Attack {
 			if ((Random.nextInt(100) + 1) <= 33) 
 				weaponDamage *= 2;
 
+
+
+
 		return weaponDamage;
 	}
 
@@ -926,6 +929,12 @@ public class L1Attack {
 			L1WeaponSkill.giveArkMageDiseaseEffect(_pc, _target);
 		} else {
 			dmg += L1WeaponSkill.getWeaponSkillDamage(_pc, _target, _weaponId);
+		}
+
+		if (_weaponType != 20 && _weaponType != 62) { // 防具による追加ダメージ
+			dmg += _pc.getDmgModifierByArmor();
+		} else {
+			dmg += _pc.getBowDmgModifierByArmor();
 		}
 
 		dmg -= _targetPc.getDamageReductionByArmor(); // 防具によるダメージ軽減
@@ -1035,6 +1044,12 @@ public class L1Attack {
 			dmg = calLongRageDamage(dmg);
 		else
 			dmg = calShortRageDamage(dmg);
+
+		if (_weaponType != 20 && _weaponType != 62) { // 防具による追加ダメージ
+			dmg += _pc.getDmgModifierByArmor();
+		} else {
+			dmg += _pc.getBowDmgModifierByArmor();
+		}
 
 		if (_weaponId == 124 || _weaponId == 289 || _weaponId == 290
 				|| _weaponId == 291 || _weaponId == 292 || _weaponId == 293
