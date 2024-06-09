@@ -36,7 +36,7 @@ public class L1WorldMap {
 
 	private L1WorldMap() {
 		PerformanceTimer timer = new PerformanceTimer();
-		System.out.print("loading map...");
+		System.out.print("正在讀取地圖檔案...");
 
 		try {
 			_maps = MapReader.getDefaultReader().read();

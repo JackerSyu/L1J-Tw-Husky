@@ -85,7 +85,7 @@ public class NpcActionTable {
 	public static void load() {
 		try {
 			PerformanceTimer timer = new PerformanceTimer();
-			System.out.print("loading npcaction...");
+			System.out.print("讀取NPC對話檔...");
 			_instance = new NpcActionTable();
 			System.out.println("OK! " + timer.get() + "ms");
 		}

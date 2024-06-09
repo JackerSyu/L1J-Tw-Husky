@@ -445,6 +445,9 @@ public final class Config {
 	
 	public static final String RECORD_SETTINGS_CONFIG_FILE = "./config/record.properties";
 
+	public static final String OTHERSETTINGS_SETTINGS_CONFIG_FILE = "./config/othersettings.properties";
+
+
 	/** 其他設定 */
 
 	// 吸收每個 NPC 的 MP 上限
@@ -452,6 +455,9 @@ public final class Config {
 
 	// 每一次攻擊吸收的 MP 上限(馬那、鋼鐵馬那）
 	public static final int MANA_DRAIN_LIMIT_PER_SOM_ATTACK = 9;
+
+	public static int RESTART_TIME; //重新啟動伺服器
+
 
 	public static void load() {
 		_log.info("loading gameserver config");
@@ -758,6 +764,20 @@ public final class Config {
 		}catch (Exception e) {
 			_log.log(Level.SEVERE, e.getLocalizedMessage(), e);
 			throw new Error("Failed to Load: " + RECORD_SETTINGS_CONFIG_FILE);
+		}
+
+		// othersettings.properties
+		Properties otherSettings = new Properties();
+		try {
+			InputStream is = new FileInputStream(new File(OTHERSETTINGS_SETTINGS_CONFIG_FILE));
+			otherSettings.load(is);
+			is.close();
+
+			RESTART_TIME = Integer.parseInt(otherSettings.getProperty("RestartTime", "240"));//重新啟動伺服器
+		}
+		catch (Exception e) {
+			_log.log(Level.SEVERE, e.getLocalizedMessage(), e);
+			throw new Error("無法讀取設定檔: " + OTHERSETTINGS_SETTINGS_CONFIG_FILE);
 		}
 
 		validate();
@@ -1156,7 +1176,12 @@ public final class Config {
 		}
 		else if (pName.equalsIgnoreCase("LoggingArmorEnchant")) {
 			LOGGING_ARMOR_ENCHANT = Byte.parseByte(pValue);
-		} else {
+		}
+		//othersettings.properties
+		else if (pName.equalsIgnoreCase("RestartTime")) {
+			RESTART_TIME = Integer.valueOf(pValue);
+		}
+		else {
 			return false;
 		}
 		return true;

@@ -156,7 +156,7 @@ public class L1TreasureBox {
 
 	public static void load() {
 		PerformanceTimer timer = new PerformanceTimer();
-		System.out.print("loading TreasureBox...");
+		System.out.print("讀取寶箱資料...");
 		try {
 			JAXBContext context = JAXBContext
 					.newInstance(L1TreasureBox.TreasureBoxList.class);

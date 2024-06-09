@@ -40,6 +40,10 @@ public class L1GameTime {
 		_time = time;
 		_calendar = makeCalendar(time);
 	}
+	//重新啟動伺服器
+	public L1GameTime(){
+		this((int) System.currentTimeMillis());
+	}
 
 	public static L1GameTime valueOf(long timeMillis) {
 		long t1 = timeMillis - BASE_TIME_IN_MILLIS_REAL;
@@ -81,6 +85,8 @@ public class L1GameTime {
 		int hour = _calendar.get(Calendar.HOUR_OF_DAY);
 		return !IntRange.includes(hour, 6, 17); // 6:00-17:59(昼)で無ければtrue
 	}
+
+
 
 	@Override
 	public String toString() {

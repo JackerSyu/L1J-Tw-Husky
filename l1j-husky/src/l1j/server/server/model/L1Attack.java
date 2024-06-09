@@ -1690,34 +1690,32 @@ public class L1Attack {
 			}
 		}
 		String msg0 = "";
-		String msg1 = " 造成 ";
+		String msg1 = "造成";
 		String msg2 = "";
 		String msg3 = "";
 		String msg4 = "";
-		if ((_calcType == PC_PC) || (_calcType == PC_NPC)) { // アタッカーがＰＣの場合
-			msg0 = "物攻 對";
+		if (_calcType == PC_PC || _calcType == PC_NPC) { // アタッカーがＰＣの場合
+			msg0 = _pc.getName();
 		} else if (_calcType == NPC_PC) { // アタッカーがＮＰＣの場合
-			msg0 = _npc.getNameId() + "(物攻)：";
+			msg0 = _npc.getName();
 		}
 
-		if ((_calcType == NPC_PC) || (_calcType == PC_PC)) { // ターゲットがＰＣの場合
+		if (_calcType == NPC_PC || _calcType == PC_PC) { // ターゲットがＰＣの場合
 			msg4 = _targetPc.getName();
-			msg2 = "，剩餘 " + _targetPc.getCurrentHp() + "，命中	" + _hitRate + "%";
+			msg2 = "命中率" + _hitRate + "% 剩餘" + _targetPc.getCurrentHp();
 		} else if (_calcType == PC_NPC) { // ターゲットがＮＰＣの場合
-			msg4 = _targetNpc.getNameId();
-			msg2 = "，剩餘 " + _targetNpc.getCurrentHp() + "，命中 " + _hitRate + "%";
+			msg4 = _targetNpc.getName();
+			msg2 = "命中率" + _hitRate + "% 剩餘" + _targetNpc.getCurrentHp();
 		}
-		msg3 = _isHit ? _damage + " 傷害" : "  0 傷害";
+		msg3 = _isHit ? _damage + "傷害" : "未命中";
 
-		// 物攻 對 目標 造成 X 傷害，剩餘 Y，命中 Z %。
-		if ((_calcType == PC_PC) || (_calcType == PC_NPC)) {
+		if (_calcType == PC_PC || _calcType == PC_NPC) { // アタッカーがＰＣの場合
 			_pc.sendPackets(new S_ServerMessage(166, msg0, msg1, msg2, msg3,
-					msg4));
+					msg4)); // \f1%0が%4%1%3 %2
 		}
-		// 攻擊者(物攻)： X傷害，剩餘 Y，命中%。
-		else if ((_calcType == NPC_PC)) {
-			_targetPc.sendPackets(new S_ServerMessage(166, msg0, null, msg2,
-					msg3, null));
+		if (_calcType == NPC_PC || _calcType == PC_PC) { // ターゲットがＰＣの場合
+			_targetPc.sendPackets(new S_ServerMessage(166, msg0, msg1, msg2,
+					msg3, msg4)); // \f1%0が%4%1%3 %2
 		}
 	}
 

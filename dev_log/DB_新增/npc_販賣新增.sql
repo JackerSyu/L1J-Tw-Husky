@@ -1,4 +1,4 @@
-INSERT INTO `shop` (`npc_id`, `item_id`, `order_id`, `selling_price`, `pack_count`, `purchasing_price`) 
+ INSERT INTO `shop` (`npc_id`, `item_id`, `order_id`, `selling_price`, `pack_count`, `purchasing_price`) 
 VALUES (70073, 20115, 32, -1, 0, 6000);
 INSERT INTO `shop` (`npc_id`, `item_id`, `order_id`, `selling_price`, `pack_count`, `purchasing_price`) 
 VALUES (70073, 20101, 33, -1, 0, 6500);

@@ -351,7 +351,7 @@ public class L1BossCycle {
 
 	public static void load() {
 		PerformanceTimer timer = new PerformanceTimer();
-		System.out.print("loading boss cycle...");
+		System.out.print("讀取BOSS重生資料...");
 		try {
 			// BookOrder クラスをバインディングするコンテキストを生成
 			JAXBContext context = JAXBContext.newInstance(L1BossCycle.L1BossCycleList.class);
@@ -368,7 +368,7 @@ public class L1BossCycle {
 				_cycleMap.put(cycle.getName(), cycle);
 			}
 
-			// userデータがあれば上書き
+			// 如果用戶資料存在則覆蓋
 			File userFile = new File("./data/xml/Cycle/users/BossCycle.xml");
 			if (userFile.exists()) {
 				bossList = (L1BossCycleList) um.unmarshal(userFile);

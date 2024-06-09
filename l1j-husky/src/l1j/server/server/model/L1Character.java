@@ -38,6 +38,7 @@ import l1j.server.server.model.Instance.L1SummonInstance;
 import l1j.server.server.model.poison.L1Poison;
 import l1j.server.server.model.skill.L1SkillTimer;
 import l1j.server.server.model.skill.L1SkillTimerCreator;
+import l1j.server.server.model.map.L1Map;
 import l1j.server.server.serverpackets.S_Light;
 import l1j.server.server.serverpackets.S_PetCtrlMenu;
 import l1j.server.server.serverpackets.S_Poison;
@@ -204,7 +205,7 @@ public class L1Character extends L1Object {
 	/**
 	 * キャラクターの麻痺状態を設定する。
 	 * 
-	 * @param i
+	 * @param *i
 	 *            麻痺状態を表す値。麻痺状態であればtrue。
 	 */
 	public void setParalyzed(boolean paralyzed) {
@@ -403,24 +404,86 @@ public class L1Character extends L1Object {
 	 *            座標のY値
 	 * @return 障害物が無ければtrue、あればfalseを返す。
 	 */
+//	public boolean glanceCheck(int tx, int ty) {
+//		int chx = getX();
+//		int chy = getY();
+//		for (int i = 0; i < 15; i++) {
+//			if (chx == tx && chy == ty) {
+//				break;
+//			}
+//
+//			if (!getMap().isArrowPassable(chx, chy, targetDirection(tx, ty))) {
+//				return false;
+//			}
+//
+//			// Targetへ1タイル進める
+//			chx += Math.max(-1, Math.min(1, tx - chx));
+//			chy += Math.max(-1, Math.min(1, ty - chy));
+//		}
+//		return true;
+//	}
+
 	public boolean glanceCheck(int tx, int ty) {
+		final L1Map map = getMap();
 		int chx = getX();
 		int chy = getY();
 		for (int i = 0; i < 15; i++) {
-			if (chx == tx && chy == ty) {
+			if (((chx == tx) && (chy == ty))
+					|| ((chx + 1 == tx) && (chy - 1 == ty))
+					|| ((chx + 1 == tx) && (chy == ty))
+					|| ((chx + 1 == tx) && (chy + 1 == ty))
+					|| ((chx == tx) && (chy + 1 == ty))
+					|| ((chx - 1 == tx) && (chy + 1 == ty))
+					|| ((chx - 1 == tx) && (chy == ty))
+					|| ((chx - 1 == tx) && (chy - 1 == ty))
+					|| ((chx == tx) && (chy - 1 == ty))) {
 				break;
-			}
 
-			if (!getMap().isArrowPassable(chx, chy, targetDirection(tx, ty))) {
-				return false;
-			}
+			} else {
+				int th = targetDirection(tx, ty);
+				if (!map.isArrowPassable(chx, chy, th)) {
+					return false;
+				}
+				if (chx < tx) {
+					if (chy == ty) {
+						chx++;
 
-			// Targetへ1タイル進める
-			chx += Math.max(-1, Math.min(1, tx - chx));
-			chy += Math.max(-1, Math.min(1, ty - chy));
+					} else if (chy > ty) {
+						chx++;
+						chy--;
+
+					} else if (chy < ty) {
+						chx++;
+						chy++;
+
+					}
+
+				} else if (chx == tx) {
+					if (chy < ty) {
+						chy++;
+
+					} else if (chy > ty) {
+						chy--;
+					}
+
+				} else if (chx > tx) {
+					if (chy == ty) {
+						chx--;
+
+					} else if (chy < ty) {
+						chx--;
+						chy++;
+
+					} else if (chy > ty) {
+						chx--;
+						chy--;
+					}
+				}
+			}
 		}
 		return true;
 	}
+
 
 	/**
 	 * 指定された座標へ攻撃可能であるかを返す。
