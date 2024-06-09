@@ -52,6 +52,11 @@ public class C_Chat extends ClientBasePacket {
 		
 		int chatType = readC();
 		String chatText = readS();
+		//TODO 修正對話出現太長的字串會斷線
+		if (chatText != null && chatText.length() > 130) {
+			chatText = chatText.substring(0, 130);
+		}
+		//TODO 修正對話出現太長的字串會斷線
 		if (pc.hasSkillEffect(SILENCE) || pc.hasSkillEffect(AREA_OF_SILENCE)
 				|| pc.hasSkillEffect(STATUS_POISON_SILENCE)) {
 			return;

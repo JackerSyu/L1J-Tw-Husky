@@ -76,6 +76,7 @@ import l1j.server.server.model.trap.L1WorldTraps;
 import l1j.server.server.storage.mysql.MysqlAutoBackup;
 import l1j.server.server.utils.MysqlAutoBackupTimer;
 import l1j.server.server.utils.SystemUtil;
+import l1j.server.server.model.gametime.L1GameRestart;
 
 // Referenced classes of package l1j.server.server:
 // ClientThread, Logins, RateTable, IdFactory,
@@ -151,7 +152,7 @@ public class GameServer extends Thread {
 		}
 
 		System.out.println("┌───────────────────────────────┐");
-		System.out.println("│     " + L1Message.ver + "\t" + "\t" + "│");
+		System.out.println("│     " + L1Message.ver + "\t" + "│");
 		System.out.println("└───────────────────────────────┘" + "\n");
 
 		System.out.println(L1Message.settingslist + "\n");
@@ -175,7 +176,7 @@ public class GameServer extends Thread {
 				+ L1Message.player);
 
 		System.out.println("┌───────────────────────────────┐");
-		System.out.println("│     " + L1Message.ver + "\t" + "\t" + "│");
+		System.out.println("│     " + L1Message.ver + "\t" + "│");
 		System.out.println("└───────────────────────────────┘" + "\n");
 
 		IdFactory.getInstance();
@@ -191,6 +192,10 @@ public class GameServer extends Thread {
 
 		// 初始化遊戲時間
 		L1GameTimeClock.init();
+
+		if (Config.RESTART_TIME > 0) {
+			L1GameRestart.init();
+		}
 
 		// 初始化無限大戰
 		UbTimeController ubTimeContoroller = UbTimeController.getInstance();
@@ -277,6 +282,8 @@ public class GameServer extends Thread {
 		PetTable.getInstance();
 		ClanTable.getInstance();
 		CastleTable.getInstance();
+//		L1GameRestart.init();//add 自動重啟
+//		Thread.sleep(20000); //從開20秒後才能登入
 		L1CastleLocation.setCastleTaxRate(); // 必須在 CastleTable 初始化之後
 		GetBackRestartTable.getInstance();
 		GeneralThreadPool.getInstance();
