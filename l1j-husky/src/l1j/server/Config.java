@@ -458,6 +458,7 @@ public final class Config {
 
 	public static int RESTART_TIME; //重新啟動伺服器
 
+	public static String AUTORESTART;
 
 	public static void load() {
 		_log.info("loading gameserver config");
@@ -774,6 +775,7 @@ public final class Config {
 			is.close();
 
 			RESTART_TIME = Integer.parseInt(otherSettings.getProperty("RestartTime", "240"));//重新啟動伺服器
+			AUTORESTART = otherSettings.getProperty("AutoRestart", "");
 		}
 		catch (Exception e) {
 			_log.log(Level.SEVERE, e.getLocalizedMessage(), e);

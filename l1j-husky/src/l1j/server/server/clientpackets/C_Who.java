@@ -20,10 +20,12 @@ import l1j.server.server.ClientThread;
 import l1j.server.server.GetNowTime;
 import l1j.server.server.model.L1World;
 import l1j.server.server.model.Instance.L1PcInstance;
+import l1j.server.server.model.gametime.L1GameAutoRestart;
 import l1j.server.server.serverpackets.S_WhoAmount;
 import l1j.server.server.serverpackets.S_WhoCharinfo;
 import l1j.server.server.serverpackets.S_SystemMessage;
 import l1j.server.server.model.gametime.L1GameRestart;
+import l1j.server.server.model.gametime.L1GameAutoRestart;
 
 // Referenced classes of package l1j.server.server.clientpackets:
 // ClientBasePacket
@@ -78,6 +80,17 @@ public class C_Who extends ClientBasePacket {
 					int second = L1GameRestart.getInstance().GetRemnant();
 					pc.sendPackets(new S_SystemMessage("\\fU" + "距離伺服器重啟時間還有: "+ (second / 60) / 60 + " 小時 " + (second / 60) % 60+ " 分 " + second % 60 + " 秒。"));
 				}
+				if (Config.AUTORESTART != "") {
+					//TODO 今天日期
+					int Mon = GetNowTime.GetNowMonth();//TODO 月份錯誤補正
+					pc.sendPackets(new S_SystemMessage("\\fU" + "今天是 "+ GetNowTime.GetNowYear() + " 年 " + (Mon + 1)+ " 月 " + GetNowTime.GetNowDay() + " 日。"));
+					//TODO 目前時間
+					pc.sendPackets(new S_SystemMessage("\\fU" + "現在時間(24h): "+ GetNowTime.GetNowHour() + " 時 "+ GetNowTime.GetNowMinute() + " 分 "+ GetNowTime.GetNowSecond() + " 秒。"));
+					long second = L1GameAutoRestart.getInstance().GetRemnant();
+					pc.sendPackets(new S_SystemMessage("\\fU" + "距離伺服器重啟時間還有: "+ (second / 60) / 60 + " 小時 " + (second / 60) % 60+ " 分 " + second % 60 + " 秒。"));
+				}
+
+
 				pc.sendPackets(new S_SystemMessage("\\fU" + "================================="));
 			} else {
 				String amount = String.valueOf(L1World.getInstance().getAllPlayers().size());
