@@ -1,49 +1,52 @@
 package l1j.server.server.model.gametime;
 
+import l1j.server.Config;
+import l1j.server.server.ClientThread;
+import l1j.server.server.GameServer;
+import l1j.server.server.GeneralThreadPool;
+import l1j.server.server.model.Instance.L1PcInstance;
+import l1j.server.server.model.L1World;
+import l1j.server.server.serverpackets.S_SystemMessage;
+
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import l1j.server.Config;
-import l1j.server.server.ClientThread;
-import l1j.server.server.GameServer;
-import l1j.server.server.GeneralThreadPool;
-import java.util.Collection;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-import l1j.server.server.model.Instance.L1PcInstance;
-import l1j.server.server.model.gametime.L1GameTime;
-import l1j.server.server.model.gametime.L1GameTimeListener;
-import l1j.server.server.model.L1World;
-import l1j.server.server.serverpackets.S_SystemMessage;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
-public class L1GameRestart {
-        private static Logger _log = Logger.getLogger(L1GameRestart.class.getName());
+public class L1GameAutoRestart {
+        private static Logger _log = Logger.getLogger(L1GameAutoRestart.class.getName());
 
-        private static L1GameRestart _instance;
+        private static L1GameAutoRestart _instance;
         private volatile L1GameTime _currentTime = new L1GameTime();
         private L1GameTime _previousTime = null;
 
         private List<L1GameTimeListener> _listeners = new CopyOnWriteArrayList<L1GameTimeListener>();
 
-        private static int willRestartTime;
-        public  int _remnant ;
+        private static long willRestartTime;
+        public  long _remnant ;
 
-        private class TimeUpdaterRestar implements Runnable{
+        private class TimeUpdaterRestart implements Runnable{
             @Override
             public void run() {
                 while ( true ) {
                     _previousTime = _currentTime;
                     _currentTime = new L1GameTime();
                     notifyChanged();
-                    int remnant = GetRestartTime() * 60 ;
-                    System.out.println("正在載入自動重開設定...完成! "+ GetRestartTime()+"分鐘後" );
+                    long remnantMin = calculateRemainingMinutes(GetRestartTime()) ;
+                    long remnant = remnantMin * 60 ;
+                    System.out.println("正在載入自動重開設定...完成! "+ (remnantMin + 1) +"分鐘後" );
                     while ( remnant > 0 ) {
-                        for ( int i = remnant ; i >= 0 ; i -- ) {
+                        for ( long i = remnant + 60; i >= 0 ; i -- ) {
                             SetRemnant(i) ;
                             willRestartTime=i;
                             if ( i % 60 == 0 && i <= 300 && i != 0 )  {
@@ -59,6 +62,8 @@ public class L1GameRestart {
                                 System.out.println("伺服器重新啟動。");
                                 GameServer.getInstance().shutdown(); //TODO 修正自動重開角色資料會回溯
                                 disconnectAllCharacters();
+                                System.out.println("所有角色已中斷連線。");
+                                System.out.println("等待60秒後重開。");
                                 System.exit(1);
                             } //TODO if (1秒)
                             try {
@@ -86,8 +91,8 @@ public class L1GameRestart {
             }
         }
 
-        private int GetRestartTime()  {
-            return Config.RESTART_TIME;
+        private String GetRestartTime()  {
+            return Config.AUTORESTART;
         }
 
         private void BroadCastToAll( String string ) {
@@ -97,15 +102,15 @@ public class L1GameRestart {
             }
         }
 
-        public void SetRemnant ( int remnant ) {
+        public void SetRemnant ( long remnant ) {
             _remnant = remnant ;
         }
 
-        public static int getWillRestartTime(){
+        public static long getWillRestartTime(){
             return willRestartTime;
         }
 
-        public int GetRemnant ( ) {
+        public long GetRemnant ( ) {
             return _remnant ;
         }
 
@@ -136,15 +141,15 @@ public class L1GameRestart {
             }
         }
 
-        private L1GameRestart() {
-            GeneralThreadPool.getInstance().execute(new TimeUpdaterRestar());
+        private L1GameAutoRestart() {
+            GeneralThreadPool.getInstance().execute(new TimeUpdaterRestart());
         }
 
         public static void init() {
-            _instance = new L1GameRestart();
+            _instance = new L1GameAutoRestart();
         }
 
-        public static L1GameRestart getInstance() {
+        public static L1GameAutoRestart getInstance() {
             return _instance;
         }
 
@@ -158,5 +163,37 @@ public class L1GameRestart {
 
         public void removeListener(L1GameTimeListener listener) {
             _listeners.remove(listener);
+        }
+
+        private  long calculateRemainingMinutes(String timeString) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+
+            try {
+                // 解析字符串到日期對象
+                Date restartDate = dateFormat.parse(timeString);
+                // 獲取當前時間
+                Calendar now = Calendar.getInstance();
+                Date nowDate = now.getTime();
+
+                // 將解析的時間設置到當前日期
+                Calendar restartCalendar = Calendar.getInstance();
+                restartCalendar.setTime(restartDate);
+                restartCalendar.set(Calendar.YEAR, now.get(Calendar.YEAR));
+                restartCalendar.set(Calendar.MONTH, now.get(Calendar.MONTH));
+                restartCalendar.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
+
+                // 如果解析的時間早於當前時間，設置為第二天的時間
+                if (restartCalendar.before(now)) {
+                    restartCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                }
+
+                // 計算時間差
+                long diffInMillis = restartCalendar.getTimeInMillis() - now.getTimeInMillis();
+                return TimeUnit.MILLISECONDS.toMinutes(diffInMillis);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return -1;
+            }
         }
     }

@@ -77,6 +77,7 @@ import l1j.server.server.storage.mysql.MysqlAutoBackup;
 import l1j.server.server.utils.MysqlAutoBackupTimer;
 import l1j.server.server.utils.SystemUtil;
 import l1j.server.server.model.gametime.L1GameRestart;
+import l1j.server.server.model.gametime.L1GameAutoRestart;
 
 // Referenced classes of package l1j.server.server:
 // ClientThread, Logins, RateTable, IdFactory,
@@ -195,6 +196,10 @@ public class GameServer extends Thread {
 
 		if (Config.RESTART_TIME > 0) {
 			L1GameRestart.init();
+		}
+
+		if (Config.AUTORESTART != "") {
+			L1GameAutoRestart.init();
 		}
 
 		// 初始化無限大戰
